@@ -8,6 +8,7 @@ import {
   rejectTicket,
   completeTicket,
   getTodayWaitingTickets,
+  getPublicTickets ,
   getProcessedTickets
 } from "../controllers/ticketController.js"
 
@@ -45,6 +46,8 @@ router.get(
   authorizeRoles("dentist","admin"),
   getTodayWaitingTickets
 )
+
+router.get("/public", getPublicTickets)
 
 /* ======================
 PROCESSED TICKETS

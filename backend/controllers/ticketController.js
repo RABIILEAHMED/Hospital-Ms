@@ -92,6 +92,18 @@ export const getTodayTickets = async (req, res) => {
   }
 }
 
+export const getPublicTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find()
+      .sort({ createdAt: -1 })
+      .limit(10) // si homepage u fududaato
+
+    res.status(200).json(tickets)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
 /* ======================
 WAITING
 ====================== */

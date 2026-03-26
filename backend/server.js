@@ -21,8 +21,21 @@ const app = express();
 /* ======================
    MIDDLEWARE
 ====================== */
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://hospital-ms-ten.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://hospital-ms-ten.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -45,7 +58,10 @@ const server = http.createServer(app);
 ====================== */
 export const io = new Server(server, {
   cors: {
-    origin: "https://hospital-ms-ten.vercel.app",
+    origin: [
+      "http://localhost:5173",
+      "https://hospital-ms-ten.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT"],
     credentials: true
   }

@@ -16,7 +16,7 @@ const loadData = async()=>{
   try{
     setLoading(true)
 
-    const res = await API.get("/tickets")
+    const res = await API.get("/tickets/public")
     const all = res.data || []
 
     setWaiting(all.filter(t => t.status === "waiting"))
