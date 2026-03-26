@@ -1,5 +1,5 @@
 import { useState, useContext } from "react"
-import axios from "axios"
+import API from "../api/api"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { AuthContext } from "../context/AuthContext"
@@ -23,13 +23,13 @@ export default function Login(){
 
     try{
 
-     const res = await axios.post(
-  "http://localhost:5000/api/auth/login",
-  {email,password}
-)
+const res = await API.post("/auth/login", {
+  email,
+  password
+})
 
 login(res.data)
-
+console.log({ email, password })
 // 🔥 ALL USERS → DASHBOARD
 navigate("/dashboard")
 

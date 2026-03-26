@@ -18,10 +18,21 @@ dotenv.config();
 
 const app = express();
 
-/* MIDDLEWARE */
-app.use(cors());
+/* ======================
+   MIDDLEWARE
+====================== */
+app.use(cors({
+  origin: "*", // marka aad live noqoto waxaad ku xadidi kartaa Vercel URL
+}));
 app.use(express.json());
-app.use("/reports",express.static("reports"))
+app.use("/reports", express.static("reports"));
+
+/* ======================
+   TEST ROUTE (MUHIIM)
+====================== */
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 
 /* ======================
    CREATE HTTP SERVER
@@ -33,7 +44,7 @@ const server = http.createServer(app);
 ====================== */
 export const io = new Server(server, {
   cors: {
-    origin: "*", // frontend url haddii aad leedahay geli
+    origin: "*",
     methods: ["GET", "POST", "PUT"]
   }
 });
@@ -52,7 +63,10 @@ io.on("connection", (socket) => {
 ====================== */
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("✅ MongoDB Connected"))
-.catch(err => console.log("❌ DB Error:", err));
+.catch(err => {
+  console.log("❌ DB Error:", err);
+  process.exit(1); // muhiim si Render u ogaado crash
+});
 
 /* ======================
    ROUTES
@@ -70,6 +84,6 @@ app.use("/api/appointments", appointmentRoutes);
 ====================== */
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
