@@ -22,7 +22,8 @@ const app = express();
    MIDDLEWARE
 ====================== */
 app.use(cors({
-  origin: "*", // marka aad live noqoto waxaad ku xadidi kartaa Vercel URL
+  origin: "https://hospital-ms-ten.vercel.app",
+  credentials: true
 }));
 app.use(express.json());
 app.use("/reports", express.static("reports"));
@@ -44,8 +45,9 @@ const server = http.createServer(app);
 ====================== */
 export const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT"]
+    origin: "https://hospital-ms-ten.vercel.app",
+    methods: ["GET", "POST", "PUT"],
+    credentials: true
   }
 });
 
