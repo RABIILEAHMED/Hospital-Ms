@@ -1,13 +1,92 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- CHARSET & VIEWPORT -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+
+    <!-- TITLE -->
+    <title>Hospital Management System</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/hospital.png" />
+
+    <!-- SEO META -->
+    <meta name="description" content="Professional Hospital Management System for managing patients, doctors, appointments, billing, and reports." />
+    <meta name="keywords" content="hospital, management system, patients, doctors, healthcare, dashboard" />
+    <meta name="author" content="Hospital MS" />
+
+    <!-- OPEN GRAPH (for sharing links) -->
+    <meta property="og:title" content="Hospital Management System" />
+    <meta property="og:description" content="Smart healthcare management platform." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/preview.png" />
+
+    <!-- THEME COLOR -->
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- LOADING STYLE -->
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #0f172a;
+      }
+
+      #loader {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        flex-direction: column;
+        color: white;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #1e293b;
+        border-top: 5px solid #38bdf8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
   </head>
+
   <body>
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+      <div class="spinner"></div>
+      <p>Loading Hospital System...</p>
+    </div>
+
+    <!-- REACT ROOT -->
     <div id="root"></div>
+
+    <!-- MAIN SCRIPT -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- REMOVE LOADER AFTER LOAD -->
+    <script>
+      window.addEventListener("load", () => {
+        const loader = document.getElementById("loader");
+        if (loader) {
+          loader.style.display = "none";
+        }
+      });
+    </script>
   </body>
 </html>

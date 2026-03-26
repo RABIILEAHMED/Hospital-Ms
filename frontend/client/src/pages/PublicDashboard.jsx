@@ -51,14 +51,14 @@ return(
 <div className="flex justify-between items-center p-5 bg-white/80 backdrop-blur shadow-sm sticky top-0 z-10">
 
 <h1 className="text-xl font-bold text-blue-600 flex items-center gap-2">
-🏥 <span>Smart Clinic</span>
+🏥 <span>Hospital Ms</span>
 </h1>
 
 <Link
 to="/login"
 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
 >
-Doctor Login
+ Login
 </Link>
 
 </div>

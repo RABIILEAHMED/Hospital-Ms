@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import cron from "node-cron";
+import axios from "axios";
 
 /* ROUTES */
 import authRoutes from "./routes/authRoutes.js";
@@ -38,6 +40,7 @@ app.use(cors({
   },
   credentials: true
 }));
+
 app.use(express.json());
 app.use("/reports", express.static("reports"));
 
@@ -46,6 +49,13 @@ app.use("/reports", express.static("reports"));
 ====================== */
 app.get("/", (req, res) => {
   res.send("API is running...");
+});
+
+/* ======================
+   PING ROUTE (FOR CRON)
+====================== */
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
 });
 
 /* ======================
@@ -58,10 +68,7 @@ const server = http.createServer(app);
 ====================== */
 export const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "https://hospital-ms-ten.vercel.app"
-    ],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT"],
     credentials: true
   }
@@ -96,6 +103,18 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/lab", labRoutes);
 app.use("/api/appointments", appointmentRoutes);
+
+/* ======================
+   SELF PING CRON JOB (EVERY 5 MIN)
+====================== */
+cron.schedule("*/5 * * * *", async () => {
+  try {
+    const res = await axios.get(`${process.env.BACKEND_URL || "https://hospital-ms-ask1.onrender.com"}/ping`);
+    console.log("⏱️ Self ping successful:", res.status);
+  } catch (err) {
+    console.log("❌ Self ping failed:", err.message);
+  }
+});
 
 /* ======================
    START SERVER

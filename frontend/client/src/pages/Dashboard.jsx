@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import { motion } from "framer-motion"
 import { AuthContext } from "../context/AuthContext"
 import { useSearchParams } from "react-router-dom"
@@ -31,10 +31,10 @@ const { user, logout } = useContext(AuthContext)
 const [sidebarOpen,setSidebarOpen] = useState(false)
 const [dark,setDark] = useState(false)
 
-const [searchParams, setSearchParams] = useSearchParams()
+const [searchParams] = useSearchParams()
 const [activePage,setActivePage] = useState("dashboard")
 
-// ✅ MODAL STATE
+// MODAL STATE
 const [selectedPatientId,setSelectedPatientId] = useState(null)
 const [showProfile,setShowProfile] = useState(false)
 const [error,setError] = useState("")
@@ -76,14 +76,13 @@ const filteredMenu = menuItems.filter(item =>
   item.roles.includes(user?.role)
 )
 
-/* ====================== PROFILE OPEN ====================== */
+/* ====================== PROFILE ====================== */
 
 const openPatientProfile = (id) => {
   if(!id){
     setError("Invalid patient ID")
     return
   }
-
   setSelectedPatientId(id)
   setShowProfile(true)
 }
@@ -95,7 +94,7 @@ const renderContent = () => {
 switch(activePage){
 
 case "patients":
-  return <Patients onView={openPatientProfile} /> // ✅ PASS FUNCTION
+  return <Patients onView={openPatientProfile} />
 
 case "appointments":
   return <Appointments/>
@@ -133,17 +132,17 @@ Role: {user?.role}
 {/* STATS */}
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
 
-<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Patients</h3>
 <p className="text-3xl text-blue-600">120</p>
 </div>
 
-<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Appointments</h3>
 <p className="text-3xl text-green-600">45</p>
 </div>
 
-<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+<div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Doctors</h3>
 <p className="text-3xl text-purple-600">6</p>
 </div>
@@ -193,9 +192,8 @@ return(
 <div className={`${dark ? "dark" : ""} flex min-h-screen bg-gray-100`}>
 
 {/* SIDEBAR */}
-<div className={`fixed md:static z-30 w-64 bg-blue-800 text-white p-6 flex flex-col transition-transform duration-300 ${
-sidebarOpen ? "translate-x-0" : "-translate-x-full"
-} md:translate-x-0`}>
+<div className={`fixed inset-y-0 left-0 z-40 w-64 bg-blue-800 text-white p-6 flex flex-col transition-transform duration-300
+${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
 
 <h2 className="text-2xl font-bold mb-6">🦷 Dental System</h2>
 
@@ -204,11 +202,14 @@ sidebarOpen ? "translate-x-0" : "-translate-x-full"
 <p className="text-sm">{user?.role}</p>
 </div>
 
-<nav className="space-y-2">
+<nav className="space-y-2 overflow-y-auto">
 {filteredMenu.map(item => (
 <button
 key={item.key}
-onClick={()=>setActivePage(item.key)}
+onClick={()=>{
+setActivePage(item.key)
+setSidebarOpen(false)
+}}
 className={`w-full text-left p-2 rounded transition ${
 activePage === item.key
 ? "bg-white text-blue-700 font-bold"
@@ -226,13 +227,24 @@ Logout
 
 </div>
 
+{/* OVERLAY */}
+{sidebarOpen && (
+<div
+className="fixed inset-0 bg-black/50 z-30 md:hidden"
+onClick={()=>setSidebarOpen(false)}
+/>
+)}
+
 {/* MAIN */}
-<div className="flex-1 flex flex-col">
+<div className="flex-1 flex flex-col md:ml-64 transition-all duration-300">
 
 {/* TOPBAR */}
-<div className="bg-white p-4 shadow flex justify-between items-center">
+<div className="bg-white p-4 shadow flex justify-between items-center sticky top-0 z-20">
 
-<button className="md:hidden" onClick={()=>setSidebarOpen(!sidebarOpen)}>
+<button
+className="md:hidden text-2xl"
+onClick={()=>setSidebarOpen(!sidebarOpen)}
+>
 ☰
 </button>
 
@@ -253,14 +265,15 @@ className="bg-gray-800 text-white px-3 py-1 rounded"
 
 </div>
 
-{/* ✅ PATIENT PROFILE MODAL */}
+{/* MODALS */}
 {showProfile && (
-  <PatientProfile
-    id={selectedPatientId}
-    onClose={() => setShowProfile(false)} // ✅ FIX
-  />
+<PatientProfile
+id={selectedPatientId}
+onClose={()=>setShowProfile(false)}
+/>
 )}
-{/* ❌ ERROR POPUP */}
+
+{/* ERROR */}
 {error && (
 <div className="fixed bottom-5 right-5 bg-red-500 text-white px-4 py-2 rounded shadow">
 {error}
