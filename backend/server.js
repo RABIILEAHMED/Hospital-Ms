@@ -25,7 +25,8 @@ const app = express();
 ====================== */
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://hospital-ms-ten.vercel.app"
+  "https://hospital-ms-ten.vercel.app",
+  "https://dental-clinic-app-pi.vercel.app" // ✅ NEW VERCEL LINK
 ];
 
 app.use(cors({
