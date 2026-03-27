@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext"
 import { useSearchParams } from "react-router-dom"
 
 // IMPORT PAGES
+import { useEffect } from "react"
+import API from "../api/api"
 import Patients from "./Patients"
 import Doctors from "./Doctors"
 import Tickets from "./Tickets"
@@ -38,6 +40,30 @@ const [activePage,setActivePage] = useState("dashboard")
 const [selectedPatientId,setSelectedPatientId] = useState(null)
 const [showProfile,setShowProfile] = useState(false)
 const [error,setError] = useState("")
+
+const [stats,setStats] = useState({
+  patients: 0,
+  appointments: 0,
+  doctors: 0
+})
+
+const [loading,setLoading] = useState(true)
+
+useEffect(() => {
+  const loadStats = async () => {
+    try {
+      const res = await API.get("/dashboard/stats") // ✅ backend route
+      setStats(res.data)
+    } catch (err) {
+      console.log(err)
+      setError("Failed to load dashboard data")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  loadStats()
+}, [])
 
 /* ====================== DATA ====================== */
 
@@ -134,17 +160,23 @@ Role: {user?.role}
 
 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Patients</h3>
-<p className="text-3xl text-blue-600">120</p>
+<p className="text-3xl text-blue-600">
+  {loading ? "..." : stats.patients}
+</p>
 </div>
 
 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Appointments</h3>
-<p className="text-3xl text-green-600">45</p>
+<p className="text-3xl text-green-600">
+  {loading ? "..." : stats.appointments}
+</p>
 </div>
 
 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition">
 <h3>Doctors</h3>
-<p className="text-3xl text-purple-600">6</p>
+<p className="text-3xl text-purple-600">
+  {loading ? "..." : stats.doctors}
+</p>
 </div>
 
 </div>
@@ -195,7 +227,7 @@ return(
 <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-blue-800 text-white p-6 flex flex-col transition-transform duration-300
 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
 
-<h2 className="text-2xl font-bold mb-6">🦷 Dental System</h2>
+<h2 className="text-2xl font-bold mb-6">🦷 Hospital System</h2>
 
 <div className="mb-6 bg-blue-700 p-3 rounded">
 <p>{user?.name}</p>

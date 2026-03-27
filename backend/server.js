@@ -15,6 +15,7 @@ import ticketRoutes from "./routes/ticketRoutes.js";
 import billingRoutes from "./routes/billingRoutes.js";
 import labRoutes from "./routes/labRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js"
 
 dotenv.config();
 
@@ -58,6 +59,10 @@ app.get("/", (req, res) => {
 app.get("/ping", (req, res) => {
   res.status(200).send("pong");
 });
+
+app.get("/api/test", (req,res)=>{
+  res.send("working")
+})
 
 /* ======================
    CREATE HTTP SERVER
@@ -104,6 +109,7 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/billing", billingRoutes);
 app.use("/api/lab", labRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/dashboard", dashboardRoutes)
 
 /* ======================
    SELF PING CRON JOB (EVERY 5 MIN)
